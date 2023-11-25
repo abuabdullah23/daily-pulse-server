@@ -20,7 +20,11 @@ const UserSchema = new Schema({
     isPremium: {
         type: Boolean,
         default: false
-    }
-})
+    },
+    takenPremium: {
+        type: String,
+        default: null
+    },
+}, { timestamps: true })
 
 module.exports = model('users', UserSchema);
