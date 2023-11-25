@@ -9,6 +9,7 @@ const port = process.env.PORT || 5000;
 // require routes
 const authRoutes = require('./src/routes/authRoutes');
 const userRoutes = require('./src/routes/userRoutes');
+const articleRoutes = require('./src/routes/articleRoutes');
 
 
 // middleware
@@ -18,6 +19,7 @@ applyMiddleware(app);
 // use routes
 app.use(authRoutes);
 app.use(userRoutes);
+app.use(articleRoutes)
 
 
 

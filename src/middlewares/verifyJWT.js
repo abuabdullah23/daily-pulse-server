@@ -1,20 +1,23 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const verifyJWT = async (req, res, next) => {
-    const token = req?.cookies?.token;
-    if (!token) {
-        return res.status(401).send({ message: 'Unauthorized access' })
+const verifyJWT = (req, res, next) => {
+    const authorization = req.headers.authorization;
+    if (!authorization) {
+        return res
+            .status(401)
+            .send({ error: true, message: 'Unauthorized Access' })
     }
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        // error
-        if (err) {
-            return res.status(401).send({ message: 'Unauthorized access' })
-        }
+    const token = authorization.split(' ')[1]
 
-        // decoded
-        req.user = decoded;
-        next();
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+        if (error) {
+            return res
+                .status(401)
+                .send({ error: true, message: 'Unauthorized Access' })
+        }
+        req.decoded = decoded;
+        next()
     })
 }
 

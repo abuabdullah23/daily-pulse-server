@@ -1,20 +1,29 @@
 const jwt = require('jsonwebtoken');
-const UserModel = require('../models/UserModel/UserModel');
+const UserModel = require('../models/UserModel');
 
 const verifyAdmin = async (req, res, next) => {
-    const token = req?.cookies?.token;
-
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized Access' });
+    const authorization = req.headers.authorization;
+   
+    if (!authorization) {
+        return res
+            .status(401)
+            .send({ error: true, message: 'Unauthorized Access' })
     }
+    const token = authorization.split(' ')[1]
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+        if (error) {
+            return res
+                .status(401)
+                .send({ error: true, message: 'Unauthorized Access' })
+        }
+        req.decoded = decoded;
+    })
+
+    const email = req.decoded.email;
 
     try {
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        const userEmail  = decoded.email;
-
-        // Find user by email in database
-        const user = await UserModel.findOne({ email: userEmail });
+        const user = await UserModel.findOne({ email });
         // console.log(user);
 
         if (!user) {
@@ -29,7 +38,7 @@ const verifyAdmin = async (req, res, next) => {
         next();
     } catch (error) {
         console.error('Error verifying token:', error);
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(403).json({ error: 'Unauthorized' });
     }
 };
 

@@ -5,4 +5,5 @@ const config = {
     CLIENT: process.env.CLIENT
 }
 
-module.exports = Object.freeze(config);
+module.exports = config;
+// module.exports = Object.freeze(config);

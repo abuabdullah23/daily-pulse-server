@@ -1,4 +1,4 @@
-const UserModel = require("../../../models/UserModel/UserModel");
+const UserModel = require("../../../models/UserModel");
 const { responseReturn } = require("../../../utils/response");
 
 // save user in db
@@ -9,6 +9,7 @@ exports.saveUser = async (req, res) => {
         const user = await UserModel.findOne({ email });
         if (user) {
             responseReturn(res, 404, { error: 'Email already exist' })
+            return res.status(403).send({ error: true, message: 'This category already exist.' })
         } else {
             await UserModel.create({
                 name: name.trim(),

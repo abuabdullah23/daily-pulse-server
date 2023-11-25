@@ -5,7 +5,7 @@ const verifyJWT = require('../middlewares/verifyJWT');
 const router = require('express').Router();
 
 router.post('/save-user', saveUser);
-router.get('/get-users', verifyJWT, verifyAdmin, getUsers);
+router.get('/get-users', getUsers);
 router.get('/check-admin/:email', checkAdmin);
 
 module.exports = router;
