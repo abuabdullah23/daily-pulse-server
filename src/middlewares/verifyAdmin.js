@@ -21,6 +21,7 @@ const verifyAdmin = async (req, res, next) => {
     })
 
     const email = req.decoded.email;
+    // console.log(email);
 
     try {
         const user = await UserModel.findOne({ email });

@@ -50,5 +50,45 @@ exports.checkAdmin = async (req, res) => {
     } catch (error) {
         responseReturn(res, 404, { error: 'user not found' })
     }
+}
 
+
+// delete user
+exports.deleteUser = async (req, res) => {
+    const userId = req.params.id;
+    console.log(userId);
+    try {
+        await UserModel.findByIdAndDelete(userId);
+        responseReturn(res, 200, { message: 'User delete successful' })
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
+}
+
+
+// Make Admin
+exports.makeAdmin = async (req, res) => {
+    const filter = req.params.id;
+    const update = {role: 'admin'}
+
+    try {
+        await UserModel.findByIdAndUpdate(filter, update);
+        responseReturn(res, 200, { message: 'Make Admin successful' })
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
+}
+
+
+// Remove Admin
+exports.removeAdmin = async (req, res) => {
+    const filter = req.params.id;
+    const update = {role: 'user'}
+
+    try {
+        await UserModel.findByIdAndUpdate(filter, update);
+        responseReturn(res, 200, { message: 'Remove Admin successful' })
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
 }
