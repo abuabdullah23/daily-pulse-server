@@ -6,17 +6,17 @@ const ArticleSchema = new Schema({
         required: true,
         trim: true
     },
-    userName: {
+    authorName: {
         type: String,
         require: true,
         trim: true
     },
-    userEmail: {
+    authorEmail: {
         type: String,
         require: true,
         trim: true
     },
-    userPhoto: {
+    authorPhoto: {
         type: String,
         require: true,
         trim: true
