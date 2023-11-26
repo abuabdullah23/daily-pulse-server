@@ -78,12 +78,20 @@ exports.addArticle = async (req, res) => {
     }
 }
 
+// pagination: http://localhost:5000/get-all-article?pageNumber=1&perPage=2
 
 // get all article
 exports.getAllArticle = async (req, res) => {
+    // pagination
+    const pageNumber = Number(req.query.pageNumber);
+    const perPage = Number(req.query.perPage);
+    const skipPage = (pageNumber - 1) * perPage;
+
     try {
-        const articles = await ArticleModel.find({}).sort({ createdAt: - 1 }).populate('publisher', 'name slug image')
-        res.send(articles)
+        const total = await ArticleModel.find({}).countDocuments();
+        const result = await ArticleModel.find({}).sort({ createdAt: - 1 }).skip(skipPage).limit(perPage).populate('publisher', 'name slug image')
+
+        res.send({ total, result })
     } catch (error) {
         console.log(error.message);
     }

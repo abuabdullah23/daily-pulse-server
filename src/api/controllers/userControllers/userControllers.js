@@ -23,11 +23,17 @@ exports.saveUser = async (req, res) => {
     }
 }
 
-// get all user
+// get all user: for pagination: ?pageNumber=1&perPage=2
 exports.getUsers = async (req, res) => {
+    // pagination
+    const pageNumber = Number(req.query.pageNumber);
+    const perPage = Number(req.query.perPage);
+    const skipPage = (pageNumber - 1) * perPage;
+
     try {
-        const users = await UserModel.find({}).sort({ createdAt: - 1 })
-        res.send(users)
+        const total = await UserModel.find({}).countDocuments();
+        const result = await UserModel.find({}).sort({ createdAt: - 1 }).skip(skipPage).limit(perPage)
+        res.send({ total, result })
     } catch (error) {
         console.log(error.message);
     }
@@ -69,7 +75,7 @@ exports.deleteUser = async (req, res) => {
 // Make Admin
 exports.makeAdmin = async (req, res) => {
     const filter = req.params.id;
-    const update = {role: 'admin'}
+    const update = { role: 'admin' }
 
     try {
         await UserModel.findByIdAndUpdate(filter, update);
@@ -83,7 +89,7 @@ exports.makeAdmin = async (req, res) => {
 // Remove Admin
 exports.removeAdmin = async (req, res) => {
     const filter = req.params.id;
-    const update = {role: 'user'}
+    const update = { role: 'user' }
 
     try {
         await UserModel.findByIdAndUpdate(filter, update);
