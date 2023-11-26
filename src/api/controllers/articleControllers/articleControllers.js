@@ -157,3 +157,19 @@ exports.deleteArticle = async (req, res) => {
         responseReturn(res, 500, { error: error.message })
     }
 }
+
+
+// add feedback from admin
+exports.addFeedback = async (req, res) => {
+    const filter = req.params.id;
+    const { feedback } = req.body;
+
+    const update = { adminFeedback: feedback, articleStatus: 'decline' }
+
+    try {
+        await ArticleModel.findByIdAndUpdate(filter, update);
+        responseReturn(res, 200, { message: 'Decline this article.' })
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
+}
