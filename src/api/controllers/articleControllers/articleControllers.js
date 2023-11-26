@@ -1,3 +1,4 @@
+const ArticleModel = require("../../../models/ArticleModel");
 const PublisherModel = require("../../../models/PublisherModel");
 const { responseReturn } = require("../../../utils/response");
 
@@ -45,6 +46,35 @@ exports.deletePublisher = async (req, res) => {
         await PublisherModel.findByIdAndDelete(publisherId);
         responseReturn(res, 200, { message: 'Publisher delete successful' })
     } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
+}
+
+
+
+// ==============================================
+//                 Article add
+// ==============================================
+
+exports.addArticle = async (req, res) => {
+    const { title, userName, userEmail, userPhoto, publisher, isPremium, tags, image, description } = req.body;
+
+    try {
+        await ArticleModel.create({
+            title: title.trim(),
+            userName,
+            userEmail,
+            userPhoto,
+            publisher,
+            isPremium,
+            tags,
+            image,
+            description
+        })
+        responseReturn(res, 200, { message: 'Article added successful' })
+
+    } catch (error) {
+        console.log(error);
         responseReturn(res, 500, { error: error.message })
     }
 }

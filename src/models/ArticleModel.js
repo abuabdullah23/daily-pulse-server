@@ -6,15 +6,32 @@ const ArticleSchema = new Schema({
         required: true,
         trim: true
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
+    userName: {
+        type: String,
+        require: true,
+        trim: true
+    },
+    userEmail: {
+        type: String,
+        require: true,
+        trim: true
+    },
+    userPhoto: {
+        type: String,
+        require: true,
+        trim: true
     },
     publisher: {
         type: Schema.Types.ObjectId,
-        ref: 'publishers'
+        ref: 'publishers',
+        require: true
     },
-    status: {
+    isPremium: {
+        type: String,
+        default: 'false',
+        trim: true
+    },
+    articleStatus: {
         type: String,
         default: 'pending'
     },
@@ -25,11 +42,6 @@ const ArticleSchema = new Schema({
     tags: {
         type: Array,
         require: true,
-        trim: true
-    },
-    isPremium: {
-        type: Boolean,
-        default: false,
         trim: true
     },
     image: {
