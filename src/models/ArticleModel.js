@@ -41,6 +41,10 @@ const ArticleSchema = new Schema({
         type: String,
         require: true,
         trim: true
+    },
+    adminFeedback: {
+        type: String,
+        default: null
     }
 }, { timestamps: true })
 

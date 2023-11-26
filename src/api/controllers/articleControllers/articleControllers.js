@@ -24,3 +24,27 @@ exports.addPublisher = async (req, res) => {
         responseReturn(res, 500, { error: error.message })
     }
 }
+
+
+// get all publisher
+exports.getAllPublisher = async (req, res) => {
+    try {
+        const publishers = await PublisherModel.find({}).sort({ createdAt: - 1 })
+        res.send(publishers)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+// delete Publisher
+exports.deletePublisher = async (req, res) => {
+    const publisherId = req.params.id;
+
+    try {
+        await PublisherModel.findByIdAndDelete(publisherId);
+        responseReturn(res, 200, { message: 'Publisher delete successful' })
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
+}
