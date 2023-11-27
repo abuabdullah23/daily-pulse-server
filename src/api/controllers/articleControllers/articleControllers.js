@@ -52,10 +52,13 @@ exports.deletePublisher = async (req, res) => {
 
 
 
-// ==============================================
-//                 Article
-// ==============================================
 
+
+// ============================================================== 
+//              ARTICLE CRUD OPERATION for AUTHOR
+// ============================================================== 
+
+// Add article
 exports.addArticle = async (req, res) => {
     const { title, authorName, authorEmail, authorPhoto, publisher, tags, image, description } = req.body;
 
@@ -77,6 +80,39 @@ exports.addArticle = async (req, res) => {
         responseReturn(res, 500, { error: error.message })
     }
 }
+
+
+// get all article for author
+exports.getMyArticle = async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const total = await ArticleModel.find({authorEmail: email}).countDocuments();
+        const result = await ArticleModel.find({authorEmail: email}).sort({ createdAt: - 1 }).populate('publisher', 'name slug image')
+        res.send({ total, result })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+// delete my article
+exports.deleteMyArticle = async (req, res) => {
+    const articleId = req.params.id;
+
+    try {
+        await ArticleModel.findByIdAndDelete(articleId);
+        responseReturn(res, 200, { message: 'Delete this article successful.' })
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
+}
+
+
+
+// ===============================================================
+//                 ARTICLE CRUD OPERATION FOR ADMIN
+// ===============================================================
 
 // pagination: http://localhost:5000/get-all-article?pageNumber=1&perPage=2
 
