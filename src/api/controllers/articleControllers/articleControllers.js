@@ -287,3 +287,65 @@ exports.addFeedback = async (req, res) => {
         responseReturn(res, 500, { error: error.message })
     }
 }
+
+
+
+
+// ===============================================================
+//             ARTICLE CRUD OPERATION NORMAL & LOGIN USER
+// ===============================================================
+
+// get all approved article
+exports.getApprovedArticles = async (req, res) => {
+    const filter = { articleStatus: 'approved' };
+
+    try {
+        const result = await ArticleModel.find(filter).populate('publisher').sort({ createdAt: -1 }).limit(1).off;
+        res.send(result);
+    } catch (error) {
+
+    }
+}
+
+// view increase one by one for every request. if 1: article is approved and 2: !admin || !author
+exports.viewApprovedArticleDetails = async (req, res) => {
+    const articleId = req.params.id;
+
+    // requested user email
+    const { email } = req.query;
+
+    // console.log(articleId);
+    // console.log(email);
+
+    try {
+        const article = await ArticleModel.findById(articleId);
+        const isApproved = article?.articleStatus === 'approved';
+        // console.log('isApproved: ', isApproved);
+
+        // check is user Author this article?
+        const isAuthor = email === article?.authorEmail;
+        // console.log('author: ', isAuthor);
+
+        // for check user admin or not
+        const user = await UserModel.findOne({ email });
+        const isAdmin = user?.role === 'admin';
+        // console.log('admin: ', isAdmin);
+
+        const result = await ArticleModel.findById(articleId).populate('publisher');
+        res.send(result);
+
+        if (isApproved && !isAdmin && !isAuthor) {
+            // console.log('view + 1');
+            const article = await ArticleModel.findById(articleId);
+            const views = article?.views;
+            const update = { views: views + 1 }
+
+            await ArticleModel.findByIdAndUpdate(articleId, update)
+        } else {
+            console.log('not increase');
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
