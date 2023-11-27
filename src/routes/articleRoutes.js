@@ -1,11 +1,11 @@
-const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle } = require("../api/controllers/articleControllers/articleControllers");
+const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle } = require("../api/controllers/articleControllers/articleControllers");
 
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyJWT = require("../middlewares/verifyJWT");
 const router = require('express').Router();
 
 router.post('/add-publisher', verifyJWT, verifyAdmin, addPublisher)
-router.get('/get-all-publisher', getAllPublisher)
+router.get('/get-all-publisher', verifyJWT, getAllPublisher)
 router.delete('/delete-publisher/:id', verifyJWT, verifyAdmin, deletePublisher)
 
 
@@ -13,6 +13,8 @@ router.delete('/delete-publisher/:id', verifyJWT, verifyAdmin, deletePublisher)
 router.post('/add-article', verifyJWT, addArticle);
 router.get('/get-my-article/:email', verifyJWT, getMyArticle);
 router.delete('/delete-my-article/:id', verifyJWT, deleteMyArticle);
+router.get('/get-single-article/:id', verifyJWT, viewSingleArticle);
+router.put('/update-article/:id', verifyJWT, updateArticle);
 
 
 // for admin

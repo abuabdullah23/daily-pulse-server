@@ -71,7 +71,7 @@ exports.addArticle = async (req, res) => {
             publisher,
             tags,
             image,
-            description
+            description: description.trim()
         })
         responseReturn(res, 200, { message: 'Article added successful' })
 
@@ -87,11 +87,36 @@ exports.getMyArticle = async (req, res) => {
     const { email } = req.params;
 
     try {
-        const total = await ArticleModel.find({authorEmail: email}).countDocuments();
-        const result = await ArticleModel.find({authorEmail: email}).sort({ createdAt: - 1 }).populate('publisher', 'name slug image')
+        const total = await ArticleModel.find({ authorEmail: email }).countDocuments();
+        const result = await ArticleModel.find({ authorEmail: email }).sort({ createdAt: - 1 }).populate('publisher', 'name slug image')
         res.send({ total, result })
     } catch (error) {
         console.log(error.message);
+    }
+}
+
+
+// Update article
+exports.updateArticle = async (req, res) => {
+    const { title, authorName, authorEmail, authorPhoto, publisher, tags, image, description } = req.body;
+    const id = req.params.id;
+
+    try {
+        await ArticleModel.findByIdAndUpdate(id, {
+            title: title.trim(),
+            authorName,
+            authorEmail,
+            authorPhoto,
+            publisher,
+            tags,
+            image,
+            description: description.trim()
+        })
+        responseReturn(res, 200, { message: 'Article Updated successful' })
+
+    } catch (error) {
+        console.log(error);
+        responseReturn(res, 500, { error: error.message })
     }
 }
 
@@ -105,6 +130,19 @@ exports.deleteMyArticle = async (req, res) => {
         responseReturn(res, 200, { message: 'Delete this article successful.' })
     } catch (error) {
         responseReturn(res, 500, { error: error.message })
+    }
+}
+
+
+// view single article
+exports.viewSingleArticle = async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const result = await ArticleModel.findById(id).populate('publisher', 'name');
+        res.send(result);
+    } catch (error) {
+        console.log(error.message);
     }
 }
 
