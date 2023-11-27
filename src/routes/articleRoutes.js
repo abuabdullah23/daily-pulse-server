@@ -1,4 +1,4 @@
-const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle } = require("../api/controllers/articleControllers/articleControllers");
+const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle, authorArticleDetails } = require("../api/controllers/articleControllers/articleControllers");
 
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyJWT = require("../middlewares/verifyJWT");
@@ -15,7 +15,7 @@ router.get('/get-my-article/:email', verifyJWT, getMyArticle);
 router.delete('/delete-my-article/:id', verifyJWT, deleteMyArticle);
 router.get('/get-single-article/:id', verifyJWT, viewSingleArticle);
 router.put('/update-article/:id', verifyJWT, updateArticle);
-
+router.get('/author-article-details/:id', (verifyJWT || verifyAdmin),  authorArticleDetails)
 
 // for admin
 router.get('/get-all-article', verifyJWT, verifyAdmin, getAllArticle)

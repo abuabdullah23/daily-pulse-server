@@ -1,5 +1,6 @@
 const ArticleModel = require("../../../models/ArticleModel");
 const PublisherModel = require("../../../models/PublisherModel");
+const UserModel = require("../../../models/UserModel");
 const { responseReturn } = require("../../../utils/response");
 
 // for add publisher
@@ -134,7 +135,7 @@ exports.deleteMyArticle = async (req, res) => {
 }
 
 
-// view single article
+// view single article for all user
 exports.viewSingleArticle = async (req, res) => {
     const id = req.params.id;
 
@@ -143,6 +144,37 @@ exports.viewSingleArticle = async (req, res) => {
         res.send(result);
     } catch (error) {
         console.log(error.message);
+    }
+}
+
+
+// get author article details : only author view his own article
+exports.authorArticleDetails = async (req, res) => {
+    const articleId = req.params.id;
+
+    // requested user email
+    const { email } = req.query;
+
+    // console.log(email);
+    // console.log(articleId);
+
+    try {
+        const article = await ArticleModel.findById(articleId);
+
+        // for check user admin or not
+        const user = await UserModel.findOne({ email });
+        const role = user?.role;
+
+        // console.log(email, role, article.authorEmail);
+
+        if (email === article?.authorEmail || role === 'admin') {
+            const result = await ArticleModel.findById(articleId).populate('publisher')
+            res.send(result)
+        } else {
+            responseReturn(res, 403, { error: 'Unauthorize access' })
+        }
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
     }
 }
 
