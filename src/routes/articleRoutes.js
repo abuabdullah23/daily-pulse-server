@@ -1,4 +1,4 @@
-const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle, authorArticleDetails, getApprovedArticles, viewApprovedArticleDetails } = require("../api/controllers/articleControllers/articleControllers");
+const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle, authorArticleDetails, getApprovedArticles, viewApprovedArticleDetails, getPremiumArticles, viewPremiumArticleDetails } = require("../api/controllers/articleControllers/articleControllers");
 
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyJWT = require("../middlewares/verifyJWT");
@@ -29,6 +29,10 @@ router.put('/add-feedback/:id', verifyJWT, verifyAdmin, addFeedback)
 // approved article
 router.get('/get-approved-articles', getApprovedArticles);
 router.get('/view-approved-article-details/:id', verifyJWT, viewApprovedArticleDetails);
+
+// premium article
+router.get('/get-premium-articles', getPremiumArticles);
+router.get('/view-premium-article-details/:id', viewPremiumArticleDetails);
 
 
 

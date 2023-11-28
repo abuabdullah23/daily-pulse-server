@@ -300,10 +300,10 @@ exports.getApprovedArticles = async (req, res) => {
     const filter = { articleStatus: 'approved' };
 
     try {
-        const result = await ArticleModel.find(filter).populate('publisher').sort({ createdAt: -1 }).limit(1).off;
+        const result = await ArticleModel.find(filter).populate('publisher').sort({ createdAt: -1 }).limit(1);
         res.send(result);
     } catch (error) {
-
+        console.log(error.message);
     }
 }
 
@@ -342,10 +342,88 @@ exports.viewApprovedArticleDetails = async (req, res) => {
 
             await ArticleModel.findByIdAndUpdate(articleId, update)
         } else {
-            console.log('not increase');
+            console.log('not increase views');
         }
     } catch (error) {
         console.log(error.message);
     }
 }
 
+
+// ===============================================================
+//           PREMIUM ARTICLE ARTICLE CRUD OPERATION
+// ===============================================================
+
+// get all premium article
+exports.getPremiumArticles = async (req, res) => {
+    const filter = { articleStatus: 'approved', isPremium: 'true' };
+
+    try {
+        const result = await ArticleModel.find(filter).populate('publisher').sort({ createdAt: -1 }).limit(1);
+        res.send(result);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+/** // view premium article details
+ * logic of access to view premium article details
+ * route: http://localhost:5000/view-premium-article-details/:id?email=user@email.com
+ * case 1: if article is approved && isPremium
+ * case 2: if user isAdmin || isPremiumUser
+ * 
+ * Article views increase one by one for every request. if 
+ * case 1: article is approved && isPremium. 
+ * case 2: !admin || isPremiumUser
+ */
+
+exports.viewPremiumArticleDetails = async (req, res) => {
+    const articleId = req.params.id;
+
+    // requested user email
+    const { email } = req.query;
+
+    // console.log(articleId);
+    // console.log(email);
+
+    try {
+        const article = await ArticleModel.findById(articleId);
+        const isApproved = article?.articleStatus === 'approved';
+        const isPremium = article?.isPremium === 'true';
+        console.log('article isApproved: ', isApproved);
+        console.log('article isPremium: ', isPremium);
+
+        // for check user admin or not
+        const user = await UserModel.findOne({ email });
+        const isAdmin = user?.role === 'admin';
+        console.log('isAdmin: ', isAdmin);
+
+        // check is premium user
+        const isPremiumUser = user?.isPremium === true;
+        console.log('User isPremium: ', isPremiumUser);
+
+        // view article details logic 
+        if ((isAdmin || isPremiumUser) && isApproved && isPremium) {
+            const result = await ArticleModel.findById(articleId).populate('publisher');
+            res.send(result);
+        } else {
+            console.log('Unauthorized access');
+        }
+
+        // increase views logic
+        if (isApproved && isPremium && !isAdmin && isPremiumUser) {
+            console.log('view + 1');
+            // const article = await ArticleModel.findById(articleId);
+            // const views = article?.views;
+            // const update = { views: views + 1 }
+
+            // await ArticleModel.findByIdAndUpdate(articleId, update);
+        } else {
+            console.log('not increase views');
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}

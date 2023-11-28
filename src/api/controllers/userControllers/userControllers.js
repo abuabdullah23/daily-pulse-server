@@ -59,6 +59,26 @@ exports.checkAdmin = async (req, res) => {
 }
 
 
+// check premium user
+exports.checkPremiumUser = async (req, res) => {
+    const { email } = req.params;
+
+    // try {
+    //     const user = await UserModel.findOne({ email });
+    //     let isPremiumUser = false;
+    //     if (user) {
+    //         isPremiumUser = user.isPremium === true;
+    //         responseReturn(res, 200, { isPremiumUser })
+    //         console.log(isPremiumUser);
+    //     } else {
+    //         responseReturn(res, 500, { message: 'user not found' })
+    //     }
+    // } catch (error) {
+    //     responseReturn(res, 404, { error: 'user not found' })
+    // }
+}
+
+
 // delete user
 exports.deleteUser = async (req, res) => {
     const userId = req.params.id;
@@ -97,4 +117,34 @@ exports.removeAdmin = async (req, res) => {
     } catch (error) {
         responseReturn(res, 500, { error: error.message })
     }
+}
+
+
+// get single user from db
+exports.getSingleUserDetails = async (req, res) => {
+    const { email } = req.params;
+    // console.log(email);
+    try {
+        const result = await UserModel.findOne({ email });
+        res.send(result);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// update user profile
+exports.updateUserProfile = async (req, res) => {
+    const userId = req.params.id;
+    const { yourName, imgUrl } = req.body;
+
+    try {
+        await UserModel.findByIdAndUpdate(userId, {
+            name: yourName,
+            image: imgUrl
+        })
+        responseReturn(res, 200, { message: 'Update your profile successful' })
+    } catch (error) {
+        responseReturn(res, 500, { error: error.message })
+    }
+
 }
