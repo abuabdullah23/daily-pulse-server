@@ -359,7 +359,7 @@ exports.getPremiumArticles = async (req, res) => {
     const filter = { articleStatus: 'approved', isPremium: 'true' };
 
     try {
-        const result = await ArticleModel.find(filter).populate('publisher').sort({ createdAt: -1 }).limit(1);
+        const result = await ArticleModel.find(filter).populate('publisher', 'name image').sort({ createdAt: -1 });
         res.send(result);
     } catch (error) {
         console.log(error.message);
@@ -378,7 +378,6 @@ exports.getPremiumArticles = async (req, res) => {
  * case 1: article is approved && isPremium. 
  * case 2: !admin || isPremiumUser
  */
-
 exports.viewPremiumArticleDetails = async (req, res) => {
     const articleId = req.params.id;
 
@@ -392,17 +391,17 @@ exports.viewPremiumArticleDetails = async (req, res) => {
         const article = await ArticleModel.findById(articleId);
         const isApproved = article?.articleStatus === 'approved';
         const isPremium = article?.isPremium === 'true';
-        console.log('article isApproved: ', isApproved);
-        console.log('article isPremium: ', isPremium);
+        // console.log('article isApproved: ', isApproved);
+        // console.log('article isPremium: ', isPremium);
 
         // for check user admin or not
         const user = await UserModel.findOne({ email });
         const isAdmin = user?.role === 'admin';
-        console.log('isAdmin: ', isAdmin);
+        // console.log('isAdmin: ', isAdmin);
 
         // check is premium user
         const isPremiumUser = user?.isPremium === true;
-        console.log('User isPremium: ', isPremiumUser);
+        // console.log('User isPremium: ', isPremiumUser);
 
         // view article details logic 
         if ((isAdmin || isPremiumUser) && isApproved && isPremium) {
@@ -414,14 +413,14 @@ exports.viewPremiumArticleDetails = async (req, res) => {
 
         // increase views logic
         if (isApproved && isPremium && !isAdmin && isPremiumUser) {
-            console.log('view + 1');
-            // const article = await ArticleModel.findById(articleId);
-            // const views = article?.views;
-            // const update = { views: views + 1 }
+            // console.log('view + 1');
+            const article = await ArticleModel.findById(articleId);
+            const views = article?.views;
+            const update = { views: views + 1 }
 
-            // await ArticleModel.findByIdAndUpdate(articleId, update);
+            await ArticleModel.findByIdAndUpdate(articleId, update);
         } else {
-            console.log('not increase views');
+            // console.log('not increase views');
         }
     } catch (error) {
         console.log(error.message);

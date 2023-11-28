@@ -15,7 +15,7 @@ router.get('/get-my-article/:email', verifyJWT, getMyArticle);
 router.delete('/delete-my-article/:id', verifyJWT, deleteMyArticle);
 router.get('/get-single-article/:id', verifyJWT, viewSingleArticle);
 router.put('/update-article/:id', verifyJWT, updateArticle);
-router.get('/author-article-details/:id', (verifyJWT || verifyAdmin),  authorArticleDetails)
+router.get('/author-article-details/:id', (verifyJWT || verifyAdmin), authorArticleDetails)
 
 // for admin
 router.get('/get-all-article', verifyJWT, verifyAdmin, getAllArticle)
@@ -31,8 +31,8 @@ router.get('/get-approved-articles', getApprovedArticles);
 router.get('/view-approved-article-details/:id', verifyJWT, viewApprovedArticleDetails);
 
 // premium article
-router.get('/get-premium-articles', getPremiumArticles);
-router.get('/view-premium-article-details/:id', viewPremiumArticleDetails);
+router.get('/get-premium-articles', verifyJWT, getPremiumArticles);
+router.get('/view-premium-article-details/:id', verifyJWT, viewPremiumArticleDetails);
 
 
 
