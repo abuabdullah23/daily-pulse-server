@@ -62,20 +62,21 @@ exports.checkAdmin = async (req, res) => {
 // check premium user
 exports.checkPremiumUser = async (req, res) => {
     const { email } = req.params;
+    // console.log(email);
 
-    // try {
-    //     const user = await UserModel.findOne({ email });
-    //     let isPremiumUser = false;
-    //     if (user) {
-    //         isPremiumUser = user.isPremium === true;
-    //         responseReturn(res, 200, { isPremiumUser })
-    //         console.log(isPremiumUser);
-    //     } else {
-    //         responseReturn(res, 500, { message: 'user not found' })
-    //     }
-    // } catch (error) {
-    //     responseReturn(res, 404, { error: 'user not found' })
-    // }
+    try {
+        const user = await UserModel.findOne({ email });
+        let isPremiumUser = false;
+        if (user) {
+            isPremiumUser = user.isPremium === true;
+            responseReturn(res, 200, { isPremiumUser })
+            // console.log(isPremiumUser);
+        } else {
+            responseReturn(res, 500, { message: 'user not found' })
+        }
+    } catch (error) {
+        responseReturn(res, 404, { error: 'user not found' })
+    }
 }
 
 
