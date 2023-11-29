@@ -1,6 +1,7 @@
 const ArticleModel = require("../../../models/ArticleModel");
 const PublisherModel = require("../../../models/PublisherModel");
 const UserModel = require("../../../models/UserModel");
+const queryArticles = require("../../../utils/queryArticles");
 const { responseReturn } = require("../../../utils/response");
 
 // for add publisher
@@ -294,20 +295,33 @@ exports.addFeedback = async (req, res) => {
 // ===============================================================
 //             ARTICLE CRUD OPERATION NORMAL & LOGIN USER
 // ===============================================================
+// infinity scroll route: /get-approved-articles?pageNumber=1&perPage=2
+//  ‍total query: /get-approved-articles?publisherSlug=${publisherSlug}&tagValue=${tagValue}&searchValue=${searchValue ? searchValue : ''}&pageNumber=${pageNumber}&perPage=${perPage}
 
 // get all approved article
 exports.getApprovedArticles = async (req, res) => {
     const filter = { articleStatus: 'approved' };
 
+    // pagination
+    const pageNumber = Number(req.query.pageNumber);
+    const perPage = Number(req.query.perPage);
+    const skipPage = (pageNumber - 1) * perPage;
+
     try {
-        const result = await ArticleModel.find(filter).populate('publisher').sort({ createdAt: -1 }).limit(1);
-        res.send(result);
+        const total = await ArticleModel.find(filter).countDocuments();
+
+        const approvedArticles = await ArticleModel.find(filter).sort({ createdAt: -1 }).populate('publisher', 'name slug image');
+        const totalArticles = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery();
+        const result = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery().searchQuery();
+
+        res.send({ approvedArticles: result, total, totalArticles })
     } catch (error) {
         console.log(error.message);
     }
 }
 
 // view increase one by one for every request. if 1: article is approved and 2: !admin || !author
+
 exports.viewApprovedArticleDetails = async (req, res) => {
     const articleId = req.params.id;
 
@@ -341,9 +355,10 @@ exports.viewApprovedArticleDetails = async (req, res) => {
             const update = { views: views + 1 }
 
             await ArticleModel.findByIdAndUpdate(articleId, update)
-        } else {
-            console.log('not increase views');
         }
+        // else {
+        //     console.log('not increase views');
+        // }
     } catch (error) {
         console.log(error.message);
     }
