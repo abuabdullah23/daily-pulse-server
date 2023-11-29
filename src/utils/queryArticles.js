@@ -11,9 +11,8 @@ class queryArticles {
         return this
     }
 
-    // not working
     tagQuery = () => {
-        this.articles = this.query.tagValue ? this.articles.filter((t) => t?.tags.filter((v)=> v.value) === this.query.tagValue) : this.articles
+        this.articles = this.query.tagValue ? this.articles.filter((t) => t?.tags.map((v) => v?.value) === this.query.tagValue) : this.articles
         return this
     }
 

@@ -314,6 +314,7 @@ exports.getApprovedArticles = async (req, res) => {
         const totalArticles = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery();
         const result = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery().searchQuery();
 
+        // console.log(total);
         res.send({ approvedArticles: result, total, totalArticles })
     } catch (error) {
         console.log(error.message);

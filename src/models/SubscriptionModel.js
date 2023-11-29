@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const UserSchema = new Schema({
+const SubscriptionModel = new Schema({
     name: {
         type: String,
         required: true
@@ -13,22 +13,22 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    role: {
+    transactionId: {
         type: String,
-        default: 'user'
+        required: true
     },
-    isPremium: {
-        type: Boolean,
-        default: false
+    amount: {
+        type: Number,
+        required: true
     },
-    takenPremium: {
+    takenTime: {
         type: String,
         default: null
     },
-    expiresPremium: {
+    expireTime: {
         type: String,
         default: null
     },
 }, { timestamps: true })
 
-module.exports = model('users', UserSchema);
+module.exports = model('subscriptions', SubscriptionModel);

@@ -10,6 +10,7 @@ const port = process.env.PORT || 5000;
 const authRoutes = require('./src/routes/authRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 const articleRoutes = require('./src/routes/articleRoutes');
+const subscriptionRoutes = require('./src/routes/subscriptionRoutes');
 
 
 // middleware
@@ -20,6 +21,7 @@ applyMiddleware(app);
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(articleRoutes)
+app.use(subscriptionRoutes)
 
 
 
