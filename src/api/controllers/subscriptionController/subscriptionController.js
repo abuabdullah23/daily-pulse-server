@@ -99,7 +99,7 @@ exports.saveSubscriptionMemberInfo = async (req, res) => {
 exports.removeUserPremium = async (req, res) => {
     const { email } = req.params;
     const update = { isPremium: false }
-    console.log(email);
+    // console.log(email);
 
     try {
         const result = await UserModel.findOneAndUpdate(email, update)

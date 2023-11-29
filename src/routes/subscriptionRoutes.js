@@ -8,7 +8,7 @@ router.post('/create-payment-intent', verifyJWT, createPayment)
 
 
 // save subscription member info
-router.post('/save-subscription-info', saveSubscriptionMemberInfo)
+router.post('/save-subscription-info', verifyJWT, saveSubscriptionMemberInfo)
 
 
 // make premium user after payment

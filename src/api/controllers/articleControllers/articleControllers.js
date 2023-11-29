@@ -442,3 +442,18 @@ exports.viewPremiumArticleDetails = async (req, res) => {
         console.log(error.message);
     }
 }
+
+
+// ============ count and get article, user etc =========
+
+// get all trending article
+exports.trendingArticles = async (req, res) => {
+    const filter = { articleStatus: 'approved' };
+
+    try {
+        const result = await ArticleModel.find(filter, '_id image title authorName publisher').sort({ views: -1 }).populate('publisher', 'image name').limit(6);
+        res.send(result);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
