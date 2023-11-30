@@ -149,3 +149,21 @@ exports.updateUserProfile = async (req, res) => {
     }
 
 }
+
+
+// user count method
+exports.userCount = async (req, res) => {
+    const filterAdmin = { role: 'admin' }
+    const filterPremiumUser = { isPremium: true }
+    const filterUser = { role: 'user' }
+
+    try {
+        const totalAdmin = await UserModel.find(filterAdmin).countDocuments();
+        const totalPremiumUser = await UserModel.find(filterPremiumUser).countDocuments();
+        const onlyUser = await UserModel.find(filterUser).countDocuments();
+        const totalUser = await UserModel.find({}).countDocuments();
+        res.send({totalAdmin, totalPremiumUser, onlyUser, totalUser})
+    } catch (error) {
+        console.log(error.message);
+    }
+}

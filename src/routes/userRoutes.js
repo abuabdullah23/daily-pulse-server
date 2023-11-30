@@ -1,4 +1,4 @@
-const { saveUser, checkAdmin, getUsers, deleteUser, makeAdmin, removeAdmin, getSingleUserDetails, updateUserProfile, checkPremiumUser } = require('../api/controllers/userControllers/userControllers');
+const { saveUser, checkAdmin, getUsers, deleteUser, makeAdmin, removeAdmin, getSingleUserDetails, updateUserProfile, checkPremiumUser, userCount } = require('../api/controllers/userControllers/userControllers');
 const verifyAdmin = require('../middlewares/verifyAdmin');
 const verifyJWT = require('../middlewares/verifyJWT');
 
@@ -15,5 +15,10 @@ router.put('/remove-admin/:id', verifyJWT, verifyAdmin, removeAdmin);
 // user profile routes
 router.get('/get-single-user-details/:email', verifyJWT, getSingleUserDetails);
 router.put('/update-user-profile/:id', verifyJWT, updateUserProfile);
+
+
+// countdown user
+router.get('/count-user', userCount);
+
 
 module.exports = router;

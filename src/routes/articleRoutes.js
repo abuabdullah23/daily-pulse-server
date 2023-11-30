@@ -1,4 +1,4 @@
-const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle, authorArticleDetails, getApprovedArticles, viewApprovedArticleDetails, getPremiumArticles, viewPremiumArticleDetails, trendingArticles } = require("../api/controllers/articleControllers/articleControllers");
+const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle, authorArticleDetails, getApprovedArticles, viewApprovedArticleDetails, getPremiumArticles, viewPremiumArticleDetails, trendingArticles, articlesCount } = require("../api/controllers/articleControllers/articleControllers");
 
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyJWT = require("../middlewares/verifyJWT");
@@ -37,6 +37,6 @@ router.get('/view-premium-article-details/:id', verifyJWT, viewPremiumArticleDet
 
 // for counting and showing
 router.get('/trending-articles', trendingArticles);
-
+router.get('/count-articles', articlesCount);
 
 module.exports = router;

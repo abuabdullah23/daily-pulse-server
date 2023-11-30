@@ -457,3 +457,24 @@ exports.trendingArticles = async (req, res) => {
         console.log(error.message);
     }
 }
+
+
+// article count method
+exports.articlesCount = async (req, res) => {
+    const filterApproved = { articleStatus: 'approved' }
+    const filterPending = { articleStatus: 'pending' }
+    const filterDecline = { articleStatus: 'decline' }
+    const filterPremium = { isPremium: true }
+
+    try {
+        const totalApproved = await ArticleModel.find(filterApproved).countDocuments();
+        const totalPending = await ArticleModel.find(filterPending).countDocuments();
+        const totalDecline = await ArticleModel.find(filterDecline).countDocuments();
+        const totalPremium = await ArticleModel.find(filterPremium).countDocuments();
+
+        const totalArticle = await ArticleModel.find({}).countDocuments();
+        res.send({ totalArticle, totalApproved, totalPending, totalDecline, totalPremium })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
