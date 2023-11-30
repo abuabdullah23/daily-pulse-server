@@ -313,16 +313,19 @@ exports.getApprovedArticles = async (req, res) => {
     const filter = { articleStatus: 'approved' };
 
     // pagination
-    const pageNumber = Number(req.query.pageNumber);
-    const perPage = Number(req.query.perPage);
-    const skipPage = (pageNumber - 1) * perPage;
+    // const pageNumber = Number(req.query.pageNumber);
+    // const perPage = Number(req.query.perPage);
+    // const skipPage = (pageNumber - 1) * perPage;
+
+    // console.log(req.query.pageNumber)
+    // console.log(req.query.perPage)
 
     try {
         const total = await ArticleModel.find(filter).countDocuments();
 
         const approvedArticles = await ArticleModel.find(filter).sort({ createdAt: -1 }).populate('publisher', 'name slug image');
         const totalArticles = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery();
-        const result = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery().searchQuery();
+        const result = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery().searchQuery().skip().limit();
 
         // console.log(total);
         res.send({ approvedArticles: result, total, totalArticles })
