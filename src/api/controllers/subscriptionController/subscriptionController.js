@@ -28,7 +28,7 @@ exports.createPayment = async (req, res) => {
 
 // save subscription member info and make user Premium
 exports.saveSubscriptionMemberInfo = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { name, email, image, transactionId, amount, period } = req.body;
 
     let time;
@@ -48,8 +48,10 @@ exports.saveSubscriptionMemberInfo = async (req, res) => {
         }
         // make user premium
         if (transactionId) {
-            await UserModel.findOneAndUpdate({email}, update)
+            await UserModel.findOneAndUpdate({ email }, update)
             responseReturn(res, 200, { message: 'Congratulations! You are premium user.' })
+        } else {
+            return
         }
 
         // save subscription info
@@ -58,7 +60,7 @@ exports.saveSubscriptionMemberInfo = async (req, res) => {
             email,
             image,
             transactionId,
-            amount,
+            amount: parseFloat(amount),
             takenTime: new Date(Date.now()),
             expireTime: new Date(Date.now() + time)
         })

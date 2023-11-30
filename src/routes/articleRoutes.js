@@ -1,4 +1,4 @@
-const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle, authorArticleDetails, getApprovedArticles, viewApprovedArticleDetails, getPremiumArticles, viewPremiumArticleDetails, trendingArticles, articlesCount } = require("../api/controllers/articleControllers/articleControllers");
+const { addPublisher, getAllPublisher, deletePublisher, addArticle, getAllArticle, approveArticle, makePendingArticle, makePremiumArticle, removePremiumArticle, deleteArticle, addFeedback, getMyArticle, deleteMyArticle, viewSingleArticle, updateArticle, authorArticleDetails, getApprovedArticles, viewApprovedArticleDetails, getPremiumArticles, viewPremiumArticleDetails, trendingArticles, articlesCount, getPublisherPercentage } = require("../api/controllers/articleControllers/articleControllers");
 
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const verifyJWT = require("../middlewares/verifyJWT");
@@ -25,6 +25,7 @@ router.put('/make-premium/:id', verifyJWT, verifyAdmin, makePremiumArticle)
 router.put('/remove-premium/:id', verifyJWT, verifyAdmin, removePremiumArticle)
 router.delete('/delete-article/:id', verifyJWT, verifyAdmin, deleteArticle)
 router.put('/add-feedback/:id', verifyJWT, verifyAdmin, addFeedback)
+router.get('/get-publisher-percentage', getPublisherPercentage);
 
 // approved article
 router.get('/get-approved-articles', getApprovedArticles);
@@ -37,6 +38,6 @@ router.get('/view-premium-article-details/:id', verifyJWT, viewPremiumArticleDet
 
 // for counting and showing
 router.get('/trending-articles', trendingArticles);
-router.get('/count-articles', articlesCount);
+router.get('/count-articles', verifyJWT, verifyAdmin, articlesCount);
 
 module.exports = router;

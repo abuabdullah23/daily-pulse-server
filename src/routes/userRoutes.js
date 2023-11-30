@@ -18,7 +18,7 @@ router.put('/update-user-profile/:id', verifyJWT, updateUserProfile);
 
 
 // countdown user
-router.get('/count-user', userCount);
+router.get('/count-users', userCount);
 
 
 module.exports = router;
