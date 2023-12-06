@@ -212,7 +212,7 @@ exports.getPublisherPercentage = async (req, res) => {
     const allArticle = await ArticleModel.find({}).populate('publisher', 'slug');
     const articleCount = await ArticleModel.find({})
 
-    console.log(publisherId);
+    // console.log(publisherId);
 }
 
 // approve article
@@ -325,7 +325,7 @@ exports.getApprovedArticles = async (req, res) => {
 
         const approvedArticles = await ArticleModel.find(filter).sort({ createdAt: -1 }).populate('publisher', 'name slug image');
         const totalArticles = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery();
-        const result = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery().searchQuery().skip().limit();
+        const result = new queryArticles(approvedArticles, req.query).publisherQuery().tagQuery().searchQuery().limit().skip();
 
         // console.log(total);
         res.send({ approvedArticles: result, total, totalArticles })
@@ -464,7 +464,7 @@ exports.trendingArticles = async (req, res) => {
     const filter = { articleStatus: 'approved' };
 
     try {
-        const result = await ArticleModel.find(filter, '_id image title authorName publisher isPremium views').sort({ views: -1 }).populate('publisher', 'image name').limit(6);
+        const result = await ArticleModel.find(filter, '_id image title authorName publisher isPremium views createdAt').sort({ views: -1 }).populate('publisher', 'image name').limit(6);
         res.send(result);
     } catch (error) {
         console.log(error.message);

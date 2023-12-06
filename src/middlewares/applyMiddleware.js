@@ -6,7 +6,7 @@ const applyMiddleware = (app) => {
     app.use(cors({
         origin: '*',
         credentials: true,
-        optionSuccessStatus: 200
+        optionsSuccessStatus: 200
     }));
     app.use(express.json());
 }

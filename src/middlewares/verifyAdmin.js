@@ -3,7 +3,7 @@ const UserModel = require('../models/UserModel');
 
 const verifyAdmin = async (req, res, next) => {
     const authorization = req.headers.authorization;
-   
+//    console.log(authorization);
     if (!authorization) {
         return res
             .status(401)
@@ -20,7 +20,8 @@ const verifyAdmin = async (req, res, next) => {
         req.decoded = decoded;
     })
 
-    const email = req.decoded.email;
+    const email = req?.decoded?.email;
+    // console.log(req.decoded);
     // console.log(email);
 
     try {
