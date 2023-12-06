@@ -66,6 +66,7 @@ exports.checkPremiumUser = async (req, res) => {
 
     try {
         const user = await UserModel.findOne({ email });
+        const userId = user?._id;
         let isPremiumUser = false;
         if (user) {
             isPremiumUser = user.isPremium === true;
@@ -74,9 +75,28 @@ exports.checkPremiumUser = async (req, res) => {
         } else {
             responseReturn(res, 500, { message: 'user not found' })
         }
+
+        console.log(user?.isPremium);
+
+        // premium user to normal user after subscription period
+        if (user && user.isPremium && user.expiresPremium) {
+            const currentTime = new Date();
+            const expiresPremiumTime = new Date(user.expiresPremium);
+
+            if (currentTime > expiresPremiumTime) {
+                await UserModel.findByIdAndUpdate(userId, {
+                    $set: {
+                        isPremium: false,
+                        takenPremium: null,
+                        expiresPremium: null,
+                    },
+                });
+            }
+        }
+
     } catch (error) {
-        responseReturn(res, 404, { error: 'user not found' })
-    }
+    responseReturn(res, 404, { error: 'user not found' })
+}
 }
 
 
@@ -162,7 +182,7 @@ exports.userCount = async (req, res) => {
         const totalPremiumUser = await UserModel.find(filterPremiumUser).countDocuments();
         const onlyUser = await UserModel.find(filterUser).countDocuments();
         const totalUser = await UserModel.find({}).countDocuments();
-        res.send({totalAdmin, totalPremiumUser, onlyUser, totalUser})
+        res.send({ totalAdmin, totalPremiumUser, onlyUser, totalUser })
     } catch (error) {
         console.log(error.message);
     }
