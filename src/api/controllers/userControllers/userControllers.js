@@ -76,7 +76,7 @@ exports.checkPremiumUser = async (req, res) => {
             responseReturn(res, 500, { message: 'user not found' })
         }
 
-        console.log(user?.isPremium);
+        // console.log(user?.isPremium);
 
         // premium user to normal user after subscription period
         if (user && user.isPremium && user.expiresPremium) {
@@ -93,10 +93,13 @@ exports.checkPremiumUser = async (req, res) => {
                 });
             }
         }
+        // else {
+        //     console.log('User Not Found');
+        // }
 
     } catch (error) {
-    responseReturn(res, 404, { error: 'user not found' })
-}
+        responseReturn(res, 404, { error: 'user not found' })
+    }
 }
 
 

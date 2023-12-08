@@ -246,7 +246,7 @@ exports.makePendingArticle = async (req, res) => {
 // make Premium article
 exports.makePremiumArticle = async (req, res) => {
     const filter = req.params.id;
-    const update = { isPremium: 'true' }
+    const update = { isPremium: true }
 
     try {
         await ArticleModel.findByIdAndUpdate(filter, update);
@@ -260,7 +260,7 @@ exports.makePremiumArticle = async (req, res) => {
 // remove Premium article
 exports.removePremiumArticle = async (req, res) => {
     const filter = req.params.id;
-    const update = { isPremium: 'false' }
+    const update = { isPremium: false }
 
     try {
         await ArticleModel.findByIdAndUpdate(filter, update);
@@ -385,7 +385,7 @@ exports.viewApprovedArticleDetails = async (req, res) => {
 
 // get all premium article
 exports.getPremiumArticles = async (req, res) => {
-    const filter = { articleStatus: 'approved', isPremium: 'true' };
+    const filter = { articleStatus: 'approved', isPremium: true };
 
     try {
         const result = await ArticleModel.find(filter).populate('publisher', 'name image').sort({ createdAt: -1 });
@@ -419,7 +419,7 @@ exports.viewPremiumArticleDetails = async (req, res) => {
     try {
         const article = await ArticleModel.findById(articleId);
         const isApproved = article?.articleStatus === 'approved';
-        const isPremium = article?.isPremium === 'true';
+        const isPremium = article?.isPremium === true;
         // console.log('article isApproved: ', isApproved);
         // console.log('article isPremium: ', isPremium);
 

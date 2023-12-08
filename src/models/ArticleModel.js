@@ -27,8 +27,8 @@ const ArticleSchema = new Schema({
         require: true
     },
     isPremium: {
-        type: String,
-        default: 'false',
+        type: Boolean,
+        default: false,
         trim: true
     },
     articleStatus: {

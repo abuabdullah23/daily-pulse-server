@@ -13,7 +13,7 @@ router.put('/make-admin/:id', verifyJWT, verifyAdmin, makeAdmin);
 router.put('/remove-admin/:id', verifyJWT, verifyAdmin, removeAdmin);
 
 // user profile routes
-router.get('/get-single-user-details/:email', verifyJWT, getSingleUserDetails);
+router.get('/get-single-user-details/:email', getSingleUserDetails);
 router.put('/update-user-profile/:id', verifyJWT, updateUserProfile);
 
 
